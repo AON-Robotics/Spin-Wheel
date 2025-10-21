@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Activity Spin Wheel</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+    <div class="topbar__inner">
+        <img class="logo" src="img/AON_LOGO.png" alt="AON Robotics">
+        <h1>Activity Spin Wheel</h1>
+        <div class="spacer"></div>
+    </div>
+</header>
+
+<main class="layout">
+    <section class="stage">
+        <div class="wheel-wrap">
+            <!-- Wheel -->
+            <div class="wheel" id="wheel" aria-label="Wheel"></div>
+
+            <!-- <=< Flag -->
+            <div class="flag" aria-hidden="true"></div>
+        </div>
+
+        <div class="controls">
+            <button id="spinBtn" class="btn">SPIN</button>
+            <button id="fetchBtn" class="btn">FETCH</button>
+        </div>
+    </section>
+
+    <aside class="winners">
+        <h2>WINNERS</h2>
+    </aside>
+</main>
+
+<script>
+    // Spin
+    const wheel = document.getElementById('wheel');
+    const spinBtn = document.getElementById('spinBtn');
+    let rotation = 0;
+
+    spinBtn.addEventListener('click', () => {
+        spinBtn.disabled = true;
+
+        const turns = 5 + Math.floor(Math.random() * 4);
+        const extra = Math.floor(Math.random() * 360);
+        const delta = turns * 360 + extra;
+
+        const duration = Math.min(6.4, Math.max(3.6, 3.0 + delta / 720));
+        wheel.style.setProperty('--spin-duration', `${duration}s`);
+
+        rotation += delta;
+        wheel.style.transform = `rotate(${rotation}deg)`;
+
+        setTimeout(() => { spinBtn.disabled = false; }, duration * 1000 + 200);
+    });
+</script>
+</body>
+</html>
