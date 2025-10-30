@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Activity Spin Wheel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<header class="topbar">
+    <div class="topbar__inner">
+        <img class="logo" src="{{ url_for('static', filename='img/AON_LOGO.png') }}" alt="AON Robotics">
+        <h1>Activity Spin Wheel</h1>
+        <div class="spacer"></div>
+    </div>
+</header>
+
+<main class="layout">
+    <section class="stage">
+        <div class="wheel-wrap">
+            <canvas id="wheel" width="500" height="500"></canvas>
+            <button id="spinBtn" class="btn">SPIN</button>
+        </div>
+
+        <div class="controls">
+            <button id="fetchBtn" class="btn">FETCH</button>
+        </div>
+    </section>
+
+    <aside class="winners">
+        <h2>WINNERS</h2>
+    </aside>
+</main>
+
+<script>
+const canvas = document.getElementById('wheel');
+const ctx = canvas.getContext('2d');
+const radius = canvas.width / 2;
+
+let rotation = 0;
+
+// Predefined colors
+const COLORS = [
+    '#e11d48','#f97316','#f59e0b','#84cc16','#16a34a',
+    '#10b981','#3b82f6','#6366f1','#8b5cf6','#7c3aed',
+    '#d946ef','#fb7185'
+];
+
+// Pick color from array cyclically
+function getColor(index) {
+    return COLORS[index % COLORS.length];
+}
+
+// Fetch data from Flask backend
+async function fetchWheelData() {
+    const res = await fetch('http://127.0.0.1:5000/api/fetch');
+    const data = await res.json();
+    return data; // array of {name, tickets, start_angle, end_angle, angle_degrees}
+}
+
+// Draw the wheel
+function drawWheel(segments) {
+    let startAngle = 0;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    segments.forEach((seg, i) => {
+        const angle = seg.angle_degrees * Math.PI / 180;
+        const endAngle = startAngle + angle;
+
+        // Draw segment
+        ctx.beginPath();
+        ctx.moveTo(radius, radius);
+        ctx.arc(radius, radius, radius, startAngle, endAngle);
+        ctx.fillStyle = getColor(i);
+        ctx.fill();
+        ctx.closePath();
+
+        // Draw the name
+        const midAngle = startAngle + angle / 2;
+        ctx.save();
+        ctx.translate(radius, radius);
+        ctx.rotate(midAngle);
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#000';
+        ctx.font = '14px Arial';
+        ctx.fillText(seg.name, radius - 10, 5);
+        ctx.restore();
+
+        startAngle = endAngle;
+    });
+}
+
+// Fetch and draw on page load
+let wheelData = [];
+fetchWheelData().then(data => {
+    wheelData = data;
+    drawWheel(data);
+});
+
+// Spin wheel
+document.getElementById('spinBtn').addEventListener('click', () => {
+    const extra = Math.random() * 360 + 720; // at least 2 turns
+    rotation += extra;
+    canvas.style.transition = 'transform 4s ease-out';
+    canvas.style.transform = `rotate(${rotation}deg)`;
+    
+    // Redraw wheel after spin
+    setTimeout(() => {
+        drawWheel(wheelData);
+    }, 4000);
+});
+</script>
+</body>
+</html>

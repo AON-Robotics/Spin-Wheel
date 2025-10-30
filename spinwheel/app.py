@@ -1,6 +1,6 @@
 import pandas as pd
 import random
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from flask_cors import CORS
 import gspread
 
@@ -95,7 +95,11 @@ def spin_wheel():
     
     return jsonify({"winner": winner_name})
 
+@app.route('/')
+def home():
+    return render_template('index.html')
+
 if __name__ == '__main__':
     # Run the server
     # Use '0.0.0.0' for external access if deploying
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5001)
