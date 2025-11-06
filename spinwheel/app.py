@@ -5,7 +5,7 @@ from flask_cors import CORS
 import gspread
 
 # --- Configuration ---
-GOOGLE_SHEETS_CREDENTIALS_FILE = 'spin-wheel-aon-robotis-07ae3d09ce09.json'
+GOOGLE_SHEETS_CREDENTIALS_FILE = 'bold-impulse-477421-e8-73e96e2c4662.json'
 SPREADSHEET_NAME = 'Test'
 WORKSHEET_NAME = 'Participants'
 
