@@ -1,11 +1,11 @@
 import pandas as pd
 import random
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from flask_cors import CORS
 import gspread
 
 # --- Configuration ---
-GOOGLE_SHEETS_CREDENTIALS_FILE = 'spin-wheel-aon-robotis-07ae3d09ce09.json'
+GOOGLE_SHEETS_CREDENTIALS_FILE = 'bold-impulse-477421-e8-73e96e2c4662.json'
 SPREADSHEET_NAME = 'Test'
 WORKSHEET_NAME = 'Participants'
 
@@ -94,6 +94,10 @@ def spin_wheel():
     winner_name = random.choice(weighted_list)
     
     return jsonify({"winner": winner_name})
+
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 if __name__ == '__main__':
     # Run the server
