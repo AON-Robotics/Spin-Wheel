@@ -24,6 +24,7 @@
 
         <div class="controls">
             <button id="fetchBtn" class="btn">FETCH</button>
+            <button id="clearWinnersBtn" class="btn">CLEAR</button> 
         </div>
     </section>
 
@@ -38,6 +39,27 @@ const canvas = document.getElementById('wheel');
 const ctx = canvas.getContext('2d');
 const radius = canvas.width / 2;
 const winnersList = document.getElementById('winnersList');
+const clearBtn = document.getElementById('clearWinnersBtn');
+document.getElementById('fetchBtn').addEventListener('click', async () => {
+    try {
+        // Fetch updated data from Flask backend
+        const res = await fetch('http://127.0.0.1:5000/api/fetch');
+        const data = await res.json();
+
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+
+        // Update wheel data and redraw
+        wheelData = recalcAngles(data);
+        drawWheel(wheelData);
+        alert(" Wheel updated with latest participants!");
+    } catch (err) {
+        console.error("Fetch failed:", err);
+        alert(" Could not fetch new data. Check server connection.");
+    }
+});
 
 let rotation = 0;
 let wheelData = [];
@@ -158,6 +180,11 @@ document.getElementById('spinBtn').addEventListener('click', () => {
         wheelData = recalcAngles(wheelData);
         drawWheel(wheelData);
     }, 4000);
+});
+
+// Clear winners button
+clearBtn.addEventListener('click', () => {
+    winnersList.innerHTML = '';
 });
 </script>
 </body>
