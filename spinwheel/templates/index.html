@@ -29,7 +29,7 @@
 
     <aside class="winners">
         <h2>WINNERS</h2>
-        <ul id="winnersList"></ul> <!-- Added list -->
+        <ul id="winnersList"></ul>
     </aside>
 </main>
 
@@ -59,6 +59,23 @@ async function fetchWheelData() {
     const res = await fetch('http://127.0.0.1:5000/api/fetch');
     const data = await res.json();
     return data; // array of {name, tickets, start_angle, end_angle, angle_degrees}
+}
+
+// Recalculate angles (since removing a segment changes proportions)
+function recalcAngles(segments) {
+    const totalTickets = segments.reduce((sum, s) => sum + s.tickets, 0);
+    let start = 0;
+    return segments.map(s => {
+        const angle = (s.tickets / totalTickets) * 360;
+        const seg = {
+            ...s,
+            start_angle: start,
+            end_angle: start + angle,
+            angle_degrees: angle
+        };
+        start += angle;
+        return seg;
+    });
 }
 
 // Draw the wheel
@@ -95,16 +112,14 @@ function drawWheel(segments) {
 
 // Fetch and draw on page load
 fetchWheelData().then(data => {
-    wheelData = data;
-    drawWheel(data);
+    wheelData = recalcAngles(data);
+    drawWheel(wheelData);
 });
 
 // Helper: determine winner by rotation angle
 function getWinner(rotationDegrees, segments) {
-    // Convert rotation to 0–360 range and reverse (since canvas rotates clockwise)
     const normalized = (360 - (rotationDegrees % 360)) % 360;
     let currentAngle = 0;
-
     for (const seg of segments) {
         const segAngle = seg.angle_degrees;
         if (normalized >= currentAngle && normalized < currentAngle + segAngle) {
@@ -117,12 +132,17 @@ function getWinner(rotationDegrees, segments) {
 
 // Spin wheel
 document.getElementById('spinBtn').addEventListener('click', () => {
+    if (wheelData.length === 0) {
+        alert("No more participants left!");
+        return;
+    }
+
     const extra = Math.random() * 360 + 720; // at least 2 turns
     rotation += extra;
     canvas.style.transition = 'transform 4s ease-out';
     canvas.style.transform = `rotate(${rotation}deg)`;
-    
-    // After spin ends, determine winner
+
+    // After spin ends, determine winner and update wheel
     setTimeout(() => {
         const winner = getWinner(rotation, wheelData);
 
@@ -131,7 +151,11 @@ document.getElementById('spinBtn').addEventListener('click', () => {
         li.textContent = winner;
         winnersList.appendChild(li);
 
-        // Redraw wheel (optional)
+        // Remove winner from wheel data
+        wheelData = wheelData.filter(seg => seg.name !== winner);
+
+        // Recalculate angles and redraw wheel
+        wheelData = recalcAngles(wheelData);
         drawWheel(wheelData);
     }, 4000);
 });
