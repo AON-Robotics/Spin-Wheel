@@ -1,0 +1,291 @@
+:root{
+    --black:#000;
+    --white:#fff;
+    --panel:#000;
+    --text:#fff;
+    --btn-bg:#000;
+    --btn-text:#fff;
+    --spin-duration:4s;
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+    margin:0;
+    font-family:"Trebuchet MS", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    color:var(--text);
+    background:#fff;
+}
+
+/* =======================
+   HEADER
+======================= */
+.topbar{
+    background:var(--black);
+    color:var(--white);
+}
+.topbar__inner{
+    max-width:1400px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:150px 1fr 150px;
+    align-items:center;
+    padding:10px 16px;
+}
+.logo{ height:90px; object-fit:contain; }
+.topbar h1{
+    text-align:center;
+    font-weight:800;
+    letter-spacing:.5px;
+    margin:0;
+    font-size:clamp(24px,4vw,40px);
+}
+
+/* =======================
+   MAIN LAYOUT
+======================= */
+.layout{
+    max-width:1500px;
+    margin:40px auto;
+    display:grid;
+    grid-template-columns:330px minmax(0, 520px) 330px;
+    gap:80px;
+    padding:0 20px;
+    align-items:flex-start;
+}
+.stage{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:28px;
+}
+
+/* =======================
+   WHEEL AREA
+======================= */
+.wheel-wrap{
+    --wheel-size: min(500px, 75vw);
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:540px;
+}
+
+.wheel{
+    width: var(--wheel-size);
+    height: var(--wheel-size);
+    border-radius:50%;
+    border:18px solid #fff;
+    box-shadow:0 14px 28px rgba(0,0,0,.25);
+    transition:transform var(--spin-duration) cubic-bezier(.12,.8,.08,1);
+}
+
+.wheel::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%, -50%);
+    width:62px;
+    height:62px;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:inset 0 0 3px rgba(0,0,0,.3);
+}
+
+/* =======================
+   BUTTONS
+======================= */
+.controls{
+    display:flex;
+    gap:28px;
+}
+.btn{
+    background:var(--btn-bg);
+    color:var(--btn-text);
+    padding:16px 40px;
+    border-radius:16px;
+    font-weight:800;
+    min-width:150px;
+    letter-spacing:.6px;
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+    border:none;
+    cursor:pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+.btn:hover:not(:disabled){
+    transform:translateY(-3px);
+    box-shadow:0 10px 28px rgba(0,0,0,.30);
+}
+
+/* =======================
+   PANELS
+======================= */
+
+.names-panel,
+.winners{
+    background:var(--black);
+    color:#e5e5e5;
+    border-radius:25px;
+    min-height:650px;
+    padding:28px;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:stretch;
+    box-shadow:0 18px 40px rgba(0,0,0,.25);
+}
+
+.names-panel h2,
+.winners h2{
+    font-size:20px;
+    margin:0 0 18px 0;
+    text-align:center;
+    letter-spacing:1px;
+    font-weight:900;
+}
+
+/* UL de ambos paneles */
+.names-panel ul,
+.winners ul{
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+
+/* LISTA DE PARTICIPANTES */
+#namesList{
+    max-height:570px;
+    overflow-y:auto;
+    padding-right:6px;
+}
+
+.name-item{
+    padding:8px 10px;
+    border-radius:10px;
+    margin-bottom:6px;
+    background:rgba(255,255,255,0.10);
+    font-size:15px;
+    transition:all .15s ease;
+}
+
+/* mientras pasa por el puntero */
+.name-item--active{
+    background:#fff;
+    color:#000;
+    font-weight:700;
+    transform:scale(1.03);
+}
+
+/* ganador final */
+.name-item--winner{
+    background:#22c55e;
+    color:#000;
+    font-weight:800;
+    transform:scale(1.04);
+}
+
+/* WINNERS */
+.winner-item{
+    padding:10px 14px;
+    margin-bottom:8px;
+    background:#fff;
+    color:#000;
+    font-weight:800;
+    border-radius:12px;
+}
+
+/* =======================
+   RESPONSIVE
+======================= */
+@media(max-width:1100px){
+    .layout{
+        grid-template-columns:1fr;
+        gap:30px;
+    }
+}
+
+/* =======================
+   POPUP & CONFETTI
+======================= */
+.popup{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.75);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    backdrop-filter:blur(4px);
+}
+.popup.hidden{
+    display:none;
+}
+
+/* Confetti detrás del cuadro */
+.confetti-container{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:0;
+}
+
+/* Cuadro blanco */
+.popup-content{
+    background:#fff;
+    padding:40px 60px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 20px 40px rgba(0,0,0,.3);
+    position:relative;
+    animation:pop .4s ease;
+    z-index:1;
+}
+.popup-content h1{
+    font-size:50px;
+    font-weight:900;
+    color:#000;
+    margin-bottom:30px;
+}
+
+/* Botón CLOSE dentro del popup */
+.close-btn{
+    margin-top:20px;
+    background:#000;
+    color:#fff;
+    padding:10px 30px;
+    border-radius:12px;
+    font-size:18px;
+}
+
+/* Animación popup */
+@keyframes pop{
+    0%{ transform:scale(.4); opacity:0; }
+    100%{ transform:scale(1); opacity:1; }
+}
+
+/* Confetti */
+.confetti-piece{
+    position:absolute;
+    top:-20px;
+    width:8px;
+    height:14px;
+    border-radius:2px;
+    opacity:0.9;
+    animation:confetti-fall 1.5s linear forwards;
+}
+@keyframes confetti-fall{
+    0%{
+        transform:translateY(0) rotate(0deg);
+        opacity:1;
+    }
+    100%{
+        transform:translateY(110vh) rotate(360deg);
+        opacity:0;
+    }
+}

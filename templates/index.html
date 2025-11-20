@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Activity Spin Wheel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<header class="topbar">
+    <div class="topbar__inner">
+        <img class="logo" src="{{ url_for('static', filename='img/AON_LOGO.png') }}" alt="AON Robotics">
+        <h1>Activity Spin Wheel</h1>
+        <div class="spacer"></div>
+    </div>
+</header>
+
+<main class="layout">
+    <!-- PANEL DE PARTICIPANTES -->
+    <aside class="names-panel">
+        <h2>PARTICIPANTS</h2>
+        <ul id="namesList"></ul>
+    </aside>
+
+    <!-- WHEEL -->
+    <section class="stage">
+        <div class="wheel-wrap">
+            <canvas id="wheel" class="wheel" width="500" height="500"></canvas>
+            <button id="spinBtn" class="btn">SPIN</button>
+        </div>
+
+        <div class="controls">
+            <button id="fetchBtn" class="btn">FETCH</button>
+            <button id="clearWinnersBtn" class="btn">CLEAR</button>
+        </div>
+    </section>
+
+    <!-- PANEL DE WINNERS -->
+    <aside class="winners">
+        <h2>WINNERS</h2>
+        <ul id="winnersList"></ul>
+    </aside>
+</main>
+
+<!-- POPUP DEL GANADOR CON CONFETTI -->
+<div id="winnerPopup" class="popup hidden">
+    <div id="confettiContainer" class="confetti-container"></div>
+
+    <div class="popup-content">
+        <h1 id="winnerName"></h1>
+        <button id="closePopup" class="btn close-btn">CLOSE</button>
+    </div>
+</div>
+
+<!-- AUDIO DEL SPIN -->
+<audio id="spinSound" src="{{ url_for('static', filename='sound/8bit-spinning-wheel.mp3') }}"></audio>
+
+<!-- JS externo -->
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
