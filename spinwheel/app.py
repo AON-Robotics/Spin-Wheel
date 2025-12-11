@@ -7,7 +7,7 @@ import gspread
 # --- Configuration ---
 GOOGLE_SHEETS_CREDENTIALS_FILE = 'bold-impulse-477421-e8-73e96e2c4662.json'
 SPREADSHEET_NAME = 'Test'
-WORKSHEET_NAME = 'Participants'
+WORKSHEET_NAME = 'Respuestas de formulario 1'
 
 app = Flask(__name__)
 CORS(app) # Enable CORS for frontend communication
@@ -26,9 +26,9 @@ def fetch_data_from_google_sheet():
         # Convert to a DataFrame for easy processing
         df = pd.DataFrame(data)
         
-        # Ensure column names match your sheet ('Name' and 'Tickets')
-        df = df[['Name', 'Tickets']]
-        df['Tickets'] = pd.to_numeric(df['Tickets'], errors='coerce').fillna(0).astype(int)
+        # Ensure column names match your sheet ('Nombre Completo' and 'Cantidad de taquillas compradas')
+        df = df[['Nombre Completo', 'Cantidad de taquillas compradas']]
+        df['Cantidad de taquillas compradas'] = pd.to_numeric(df['Cantidad de taquillas compradas'], errors='coerce').fillna(0).astype(int)
         
         return df.to_dict('records')
         
@@ -47,7 +47,7 @@ def get_wheel_data():
     if not participants:
         return jsonify({"error": "Could not fetch participant data."}), 500
 
-    total_tickets = sum(p['Tickets'] for p in participants)
+    total_tickets = sum(p['Cantidad de taquillas compradas'] for p in participants)
     
     if total_tickets == 0:
         return jsonify({"error": "No tickets sold."}), 400
@@ -57,12 +57,12 @@ def get_wheel_data():
     wheel_data = []
     
     for p in participants:
-        proportion = p['Tickets'] / total_tickets
+        proportion = p['Cantidad de taquillas compradas'] / total_tickets
         angle_degrees = proportion * 360
         
         wheel_data.append({
-            "name": p['Name'],
-            "tickets": p['Tickets'],
+            "name": p['Nombre Completo'],
+            "tickets": p['Cantidad de taquillas compradas'],
             "proportion": proportion,
             "start_angle": start_angle,
             "end_angle": start_angle + angle_degrees,
@@ -85,7 +85,7 @@ def spin_wheel():
     # Create a weighted list for selection (one entry per ticket)
     weighted_list = []
     for p in participants:
-        weighted_list.extend([p['Name']] * p['Tickets'])
+        weighted_list.extend([p['Nombre Completo']] * p['Cantidad de taquillas compradas'])
         
     if not weighted_list:
         return jsonify({"error": "No tickets sold."}), 400
