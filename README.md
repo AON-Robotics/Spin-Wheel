@@ -20,6 +20,8 @@ Used by AON Robotics for activity selection and random draws.
 ---
 
 ## 🗂️ Project Structure
+
+```
 project/
 │
 ├── app.py # Flask backend server
@@ -34,6 +36,7 @@ project/
 │ └── AON_LOGO.png # Organization logo (optional)
 │
 └── README.md # You are here
+```
 
 ### 🐍 Python 3.x
 -Install dependencies:
