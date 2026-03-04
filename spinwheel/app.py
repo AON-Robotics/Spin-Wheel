@@ -6,8 +6,8 @@ import gspread
 
 # --- Configuration ---
 GOOGLE_SHEETS_CREDENTIALS_FILE = 'bold-impulse-477421-e8-5654ea3ddd52.json'
-SPREADSHEET_NAME = 'Tyler, The Creator Tickets Raffle (respuestas)'
-WORKSHEET_NAME = 'Respuestas de formulario 1'
+SPREADSHEET_NAME = 'Multiple Lego Sets - Aon Raffle Second Edition  (Responses)'
+WORKSHEET_NAME = 'Form Responses 1'
 
 NAME_COL = 2        
 TICKETS_COL = 4     
