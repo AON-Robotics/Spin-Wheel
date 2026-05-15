@@ -1,7 +1,7 @@
 # 🎡 Activity Spin Wheel
 
-An interactive **spin wheel web app** built with **Flask**, **JavaScript**, and **Google Sheets integration**.  
-Designed for fair and fun random selections based on participant “tickets” (weighted chances).  
+An interactive **spin wheel web app** built with **Flask**, **JavaScript**, and **Google Sheets integration**.
+Designed for fair and fun random selections based on participant “tickets” (weighted chances).
 Used by AON Robotics for activity selection and random draws.
 
 ---
@@ -99,3 +99,10 @@ Clicking FETCH refetches updated names from Google Sheets
 → Useful if new participants were added during runtime
 
 Clicking CLEAR empties the winners list (resets display only)
+
+## How to set up for new Raffle
+
+1. Change `SPREADSHEET_NAME = '.....'` to whatever the google sheet name is e.g.: `SPREADSHEET_NAME = 'Pokemonnnn - Aon Raffle 2026 (Responses)'`
+2. Give Viewer access in the google sheet to the `client_email` from "bold-impulse-477421-e8-5654ea3ddd52.json"
+
+Thats it!
